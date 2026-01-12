@@ -1,0 +1,12 @@
+(executable
+ (public_name testocsigen)
+ (name main)
+ (libraries
+  ocsigenserver
+  ocsigenserver.ext.staticmod
+  eliom.server
+  eliom.client
+  ocsipersist-sqlite
+  js_of_ocaml))
+
+

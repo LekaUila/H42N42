@@ -6,7 +6,7 @@
 #    By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/07 12:30:24 by Leka Uïla         #+#    #+#              #
-#    Updated: 2026/01/07 12:31:53 by Leka Uïla        ###   ########.fr        #
+#    Updated: 2026/01/12 17:53:15 by Leka Uïla        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,3 +18,17 @@ maladie :
         limite de lits
     Twitter-troll (to rename) :
         more means Creets
+
+
+prérequis code :
+
+latest version of ocaml/js_of_ocaml/eliom
+
+Web UI written in OCaml on the client side
+
+Each Creet must be commanded by a Lwt thread.
+
+It will be displayed as a DOM element (a <div> or <img> for instance).
+
+Mouse events must be programmed with the Lwt_js_event module of Js_of_ocaml.
+
