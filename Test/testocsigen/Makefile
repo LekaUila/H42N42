@@ -6,13 +6,15 @@
 #    By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/07 12:52:54 by Leka Uïla         #+#    #+#              #
-#    Updated: 2026/01/13 15:01:56 by Leka Uïla        ###   ########.fr        #
+#    Updated: 2026/01/13 17:34:46 by Leka Uïla        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 PROJECTNAME = testocsigen
 
 CONFFILE = ${PROJECTNAME}.conf
+
+LOGPATH = ./local/var/log/mysite/
 
 all: rundune
 
@@ -27,6 +29,10 @@ build :
 
 clean :
 	dune clean
+	rm ${LOGPATH}access.log ${LOGPATH}errors.log ${LOGPATH}warnings.log
+
+
+fclean : clean
 
 
 installEnv :
