@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/01/13 11:07:09 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/01/13 17:26:10 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/02/03 14:52:22 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -141,7 +141,8 @@ Eliom_registration.Html.register
         (html (head (title (txt "Home")) [])
               (body [h1 [txt "Hello"];
                      cf;
-                     user_links ()])));
+                     user_links ();
+                  svg []])));
 
 Eliom_registration.Action.register
     ~service:connection_service
