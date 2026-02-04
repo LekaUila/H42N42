@@ -54,7 +54,7 @@ $(addprefix $(TEST_PREFIX), $(DIST_DIRS)):
 	mkdir -p $@
 
 staticfiles:
-	cp -rf $(LOCAL_STATIC) $(TEST_PREFIX)$(ELIOMSTATICDIR)
+	cp -rf $(LOCAL_STATIC_FILE) $(TEST_PREFIX)$(ELIOMSTATICDIR)
 
 ##----------------------------------------------------------------------
 ## Installing & Running
@@ -63,7 +63,7 @@ staticfiles:
 install: all install.static | $(addprefix $(PREFIX),$(DATADIR) $(LOGDIR) $(shell dirname $(CMDPIPE)))
 	dune install
 install.static: $(TEST_PREFIX)$(ELIOMSTATICDIR)/$(PROJECT_NAME).js | $(PREFIX)$(STATICDIR) $(PREFIX)$(ELIOMSTATICDIR)
-	cp -r $(LOCAL_STATIC) $(PREFIX)$(FILESDIR)
+	cp -r $(LOCAL_STATIC_FILE) $(PREFIX)$(FILESDIR)
 	HASH=`md5sum _build/default/client/$(PROJECT_NAME).bc.js | cut -d ' ' -f 1` && \
 	install $(addprefix -o ,$(WWWUSER)) $(JS_PREFIX)_$$HASH.js $(PREFIX)$(ELIOMSTATICDIR) && \
 	ln -sf $(PROJECT_NAME)_$$HASH.js $(PREFIX)$(ELIOMSTATICDIR)/$(PROJECT_NAME).js
