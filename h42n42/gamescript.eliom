@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/04 14:41:20 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/02/16 14:44:59 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/02/16 14:59:14 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -128,17 +128,19 @@ let%client init_client () =
       | hd :: tl ->
         if hd.holded then
         (
+          let mouse_cx = if !mouse_coor_x < (float_of_int (creek_width / 2)) then (float_of_int (creek_width / 2)) else (if !mouse_coor_x > (width -. (float_of_int (creek_width / 2))) then (width -. (float_of_int (creek_width / 2))) else !mouse_coor_x) in
+          let mouse_cy = if !mouse_coor_y < (float_of_int (creek_width / 2)) then (float_of_int (creek_width / 2)) else (if !mouse_coor_y > (height -. (float_of_int (creek_height / 2))) then (height -. (float_of_int (creek_height / 2))) else !mouse_coor_y) in
           if !mouse_holding == 2 then
           (
-            hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float !mouse_coor_x) - (creek_width / 2))));
-            hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float !mouse_coor_y) - (creek_height / 2))));
-            ({elt = hd.elt; coord = {x = (!mouse_coor_x -. (float_of_int (creek_width / 2))); y = (!mouse_coor_y -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = false;} : creature) :: moveCreature tl
+            hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cx) - (creek_width / 2))));
+            hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cy) - (creek_height / 2))));
+            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = false;} : creature) :: moveCreature tl
           )
           else
           (
-            hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float !mouse_coor_x) - (creek_width / 2))));
-            hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float !mouse_coor_y) - (creek_height / 2))));
-            ({elt = hd.elt; coord = {x = (!mouse_coor_x -. (float_of_int (creek_width / 2))); y = (!mouse_coor_y -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = hd.holded;} : creature) :: moveCreature tl
+            hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cx) - (creek_width / 2))));
+            hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cy) - (creek_height / 2))));
+            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = hd.holded;} : creature) :: moveCreature tl
           )
         )
         else
