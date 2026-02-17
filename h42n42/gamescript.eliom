@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/04 14:41:20 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/02/16 15:55:20 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/02/17 15:43:12 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -14,34 +14,94 @@ open%client Js_of_ocaml_lwt
 
 let%shared width  = 1000.
 let%shared height = 500.
-
-let%client creek_width = 50
-let%client creek_height = 50
-
 let%shared river_width = width
 let%shared river_height = 50.
-
 let%shared hospital_width = width
 let%shared hospital_height = 50.
 
-let%client sprite_normal_right = [
-                            "./img/sprite_normal_right/sprite_0.png";
-                            "./img/sprite_normal_right/sprite_1.png";
-                            "./img/sprite_normal_right/sprite_2.png";
-                            "./img/sprite_normal_right/sprite_3.png";
-                            "./img/sprite_normal_right/sprite_4.png";
-                            "./img/sprite_normal_right/sprite_5.png";
-                            "./img/sprite_normal_right/sprite_6.png"
+let%client creek_width = 50
+let%client creek_height = 50
+let%client creek_speed = 0.5
+
+
+
+
+let%client sprite_right =   [
+                              [
+                                "./img/sprite_normal_right/sprite_0.png";
+                                "./img/sprite_normal_right/sprite_1.png";
+                                "./img/sprite_normal_right/sprite_2.png";
+                                "./img/sprite_normal_right/sprite_3.png";
+                                "./img/sprite_normal_right/sprite_4.png";
+                                "./img/sprite_normal_right/sprite_5.png";
+                                "./img/sprite_normal_right/sprite_6.png"
+                              ];
+                              [
+                                "./img/sprite_sick_right/sprite_0.png";
+                                "./img/sprite_sick_right/sprite_1.png";
+                                "./img/sprite_sick_right/sprite_2.png";
+                                "./img/sprite_sick_right/sprite_3.png";
+                                "./img/sprite_sick_right/sprite_4.png";
+                                "./img/sprite_sick_right/sprite_5.png";
+                                "./img/sprite_sick_right/sprite_6.png"
+                              ];
+                              [
+                                "./img/sprite_mean_right/sprite_0.png";
+                                "./img/sprite_mean_right/sprite_1.png";
+                                "./img/sprite_mean_right/sprite_2.png";
+                                "./img/sprite_mean_right/sprite_3.png";
+                                "./img/sprite_mean_right/sprite_4.png";
+                                "./img/sprite_mean_right/sprite_5.png";
+                                "./img/sprite_mean_right/sprite_6.png"
+                              ];
+                              [
+                                "./img/sprite_rage_right/sprite_0.png";
+                                "./img/sprite_rage_right/sprite_1.png";
+                                "./img/sprite_rage_right/sprite_2.png";
+                                "./img/sprite_rage_right/sprite_3.png";
+                                "./img/sprite_rage_right/sprite_4.png";
+                                "./img/sprite_rage_right/sprite_5.png";
+                                "./img/sprite_rage_right/sprite_6.png"
+                              ]
                             ]
 
-let%client sprite_normal_left = [
-                            "./img/sprite_normal_left/sprite_0.png";
-                            "./img/sprite_normal_left/sprite_1.png";
-                            "./img/sprite_normal_left/sprite_2.png";
-                            "./img/sprite_normal_left/sprite_3.png";
-                            "./img/sprite_normal_left/sprite_4.png";
-                            "./img/sprite_normal_left/sprite_5.png";
-                            "./img/sprite_normal_left/sprite_6.png"
+let%client sprite_left =    [
+                              [
+                                "./img/sprite_normal_left/sprite_0.png";
+                                "./img/sprite_normal_left/sprite_1.png";
+                                "./img/sprite_normal_left/sprite_2.png";
+                                "./img/sprite_normal_left/sprite_3.png";
+                                "./img/sprite_normal_left/sprite_4.png";
+                                "./img/sprite_normal_left/sprite_5.png";
+                                "./img/sprite_normal_left/sprite_6.png"
+                              ];
+                              [
+                                "./img/sprite_sick_left/sprite_0.png";
+                                "./img/sprite_sick_left/sprite_1.png";
+                                "./img/sprite_sick_left/sprite_2.png";
+                                "./img/sprite_sick_left/sprite_3.png";
+                                "./img/sprite_sick_left/sprite_4.png";
+                                "./img/sprite_sick_left/sprite_5.png";
+                                "./img/sprite_sick_left/sprite_6.png"
+                              ];
+                              [
+                                "./img/sprite_mean_left/sprite_0.png";
+                                "./img/sprite_mean_left/sprite_1.png";
+                                "./img/sprite_mean_left/sprite_2.png";
+                                "./img/sprite_mean_left/sprite_3.png";
+                                "./img/sprite_mean_left/sprite_4.png";
+                                "./img/sprite_mean_left/sprite_5.png";
+                                "./img/sprite_mean_left/sprite_6.png"
+                              ];
+                              [
+                                "./img/sprite_rage_left/sprite_0.png";
+                                "./img/sprite_rage_left/sprite_1.png";
+                                "./img/sprite_rage_left/sprite_2.png";
+                                "./img/sprite_rage_left/sprite_3.png";
+                                "./img/sprite_rage_left/sprite_4.png";
+                                "./img/sprite_rage_left/sprite_5.png";
+                                "./img/sprite_rage_left/sprite_6.png"
+                              ]
                             ]
 
 type%client coordonate =
@@ -98,6 +158,7 @@ let%shared svg_elt =
     ]
 
 let%client init_client () =
+  Random.self_init ();
   let log s () = Js_of_ocaml.Firebug.console##log (Js_of_ocaml.Js.string s) in
   let next_sprite = ref 1 in
   let mouse_coor_x = ref 0. in
@@ -127,6 +188,12 @@ let%client init_client () =
       | [] -> ""
       | hd :: tl -> if x == 0 then hd else getEltOfList tl (x - 1)
    in
+
+  let rec getEltOfListList l x = 
+      match l with
+      | [] -> []
+      | hd :: tl -> if x == 0 then hd else getEltOfListList tl (x - 1)
+   in
   
   let addCreek list gamewindow x y = 
     (* Créer un nouvel élément <image> SVG *)
@@ -140,10 +207,10 @@ let%client init_client () =
       img_svg##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int y));
       img_svg##setAttribute (Js_of_ocaml.Js.string "width") (Js_of_ocaml.Js.string (string_of_int creek_width));
       img_svg##setAttribute (Js_of_ocaml.Js.string "height") (Js_of_ocaml.Js.string (string_of_int creek_height));
-      img_svg##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList sprite_normal_right 0));
+      img_svg##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList (getEltOfListList sprite_right 0) 0));
       (* Ajouter l'image au SVG *)
       Js_of_ocaml.Dom.appendChild (Js_of_ocaml.Js.Unsafe.coerce gamewindow) img_svg;
-      list := ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = 1.; y = 1.}; status = 0; holded = false; sprite_index = 0} : creature) :: !list;
+      list := ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = (float_of_int (Random.int 2 * -2 + 1)) *. creek_speed; y = (float_of_int (Random.int 2 * -2 + 1)) *. creek_speed}; status = 0; holded = false; sprite_index = 0} : creature) :: !list;
       ()
   in
 
@@ -161,7 +228,10 @@ let%client init_client () =
           (
             hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cx) - (creek_width / 2))));
             hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cy) - (creek_height / 2))));
-            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = false; sprite_index = hd.sprite_index} : creature) :: moveCreature tl
+            if (hd.coord.y +. (float_of_int creek_height)) > (height -. hospital_height) then
+              ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = 0; holded = false; sprite_index = hd.sprite_index} : creature) :: moveCreature tl
+            else
+              ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = false; sprite_index = hd.sprite_index} : creature) :: moveCreature tl
           )
           else
           (
@@ -183,6 +253,22 @@ let%client init_client () =
           )
           else
           (
+            let new_status =
+              if hd.coord.y < river_height && hd.status == 0 then
+                (
+                  match Random.int 10 with
+                  | 9 -> 3
+                  | 8 -> 2
+                  | _ -> 1
+                )
+              else hd.status
+            in
+            let speed = match new_status with
+                        | 3 -> 0.85
+                        | 2 -> 2.
+                        | 1 -> 0.85
+                        | _ -> 1.
+            in
             let new_sprite_index = if !next_sprite == 0 then (hd.sprite_index + 1) mod 7 else hd.sprite_index in
             let new_x_dir = 
               if hd.coord.x +. hd.direction.x < 0. || hd.coord.x +. (float_of_int creek_width) +. hd.direction.x > width then
@@ -196,15 +282,15 @@ let%client init_client () =
               else
                 (hd.direction.y);
             in
-            let new_x_coor = hd.coord.x +. new_x_dir in
-            let new_y_coor = hd.coord.y +. new_y_dir in
+            let new_x_coor = hd.coord.x +. (new_x_dir *. speed) in
+            let new_y_coor = hd.coord.y +. (new_y_dir *. speed) in
             hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int (int_of_float new_x_coor)));
             hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int (int_of_float new_y_coor)));
             if new_x_dir < 0. then
-              hd.elt##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList sprite_normal_left new_sprite_index))
+              hd.elt##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList (getEltOfListList sprite_left new_status) new_sprite_index))
             else
-              hd.elt##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList sprite_normal_right new_sprite_index));
-            ({elt = hd.elt; coord = {x = new_x_coor; y = new_y_coor}; direction = {x = new_x_dir; y = new_y_dir}; status = hd.status; holded = hd.holded; sprite_index = new_sprite_index} : creature) :: moveCreature tl
+              hd.elt##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList (getEltOfListList sprite_right new_status) new_sprite_index));
+            ({elt = hd.elt; coord = {x = new_x_coor; y = new_y_coor}; direction = {x = new_x_dir; y = new_y_dir}; status = new_status; holded = hd.holded; sprite_index = new_sprite_index} : creature) :: moveCreature tl
           )
         )
     in
@@ -214,9 +300,17 @@ let%client init_client () =
     set_mouse_holding 0;
     ()
   in
-  addCreek listcreature gamewindow 75 75;
-  addCreek listcreature gamewindow 400 0;
-  addCreek listcreature gamewindow 800 200;
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
+  addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_width));
 
     (* setInterval correctement typé *)
   let _ = (Js_of_ocaml.Dom_html.window##setInterval (Js_of_ocaml.Js.wrap_callback callback) 25.  )
