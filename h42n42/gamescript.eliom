@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/04 14:41:20 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/02/16 14:59:14 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/02/16 15:55:20 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -24,6 +24,26 @@ let%shared river_height = 50.
 let%shared hospital_width = width
 let%shared hospital_height = 50.
 
+let%client sprite_normal_right = [
+                            "./img/sprite_normal_right/sprite_0.png";
+                            "./img/sprite_normal_right/sprite_1.png";
+                            "./img/sprite_normal_right/sprite_2.png";
+                            "./img/sprite_normal_right/sprite_3.png";
+                            "./img/sprite_normal_right/sprite_4.png";
+                            "./img/sprite_normal_right/sprite_5.png";
+                            "./img/sprite_normal_right/sprite_6.png"
+                            ]
+
+let%client sprite_normal_left = [
+                            "./img/sprite_normal_left/sprite_0.png";
+                            "./img/sprite_normal_left/sprite_1.png";
+                            "./img/sprite_normal_left/sprite_2.png";
+                            "./img/sprite_normal_left/sprite_3.png";
+                            "./img/sprite_normal_left/sprite_4.png";
+                            "./img/sprite_normal_left/sprite_5.png";
+                            "./img/sprite_normal_left/sprite_6.png"
+                            ]
+
 type%client coordonate =
 {
   x : float;
@@ -36,7 +56,7 @@ type%client creature =
   direction : coordonate;
   status: int;
   holded: bool;
-  
+  sprite_index: int;
 }
 
 
@@ -79,6 +99,7 @@ let%shared svg_elt =
 
 let%client init_client () =
   let log s () = Js_of_ocaml.Firebug.console##log (Js_of_ocaml.Js.string s) in
+  let next_sprite = ref 1 in
   let mouse_coor_x = ref 0. in
   let mouse_coor_y = ref 0. in
   let mouse_holding = ref 0 in
@@ -100,6 +121,12 @@ let%client init_client () =
     log (string_of_float !mouse_coor_y) ();
     Lwt.return ()
   in
+
+  let rec getEltOfList l x = 
+      match l with
+      | [] -> ""
+      | hd :: tl -> if x == 0 then hd else getEltOfList tl (x - 1)
+   in
   
   let addCreek list gamewindow x y = 
     (* Créer un nouvel élément <image> SVG *)
@@ -113,10 +140,10 @@ let%client init_client () =
       img_svg##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int y));
       img_svg##setAttribute (Js_of_ocaml.Js.string "width") (Js_of_ocaml.Js.string (string_of_int creek_width));
       img_svg##setAttribute (Js_of_ocaml.Js.string "height") (Js_of_ocaml.Js.string (string_of_int creek_height));
-      img_svg##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string "./img/geek_duck.png");
+      img_svg##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList sprite_normal_right 0));
       (* Ajouter l'image au SVG *)
       Js_of_ocaml.Dom.appendChild (Js_of_ocaml.Js.Unsafe.coerce gamewindow) img_svg;
-      list := ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = 1.; y = 1.}; status = 0; holded = false;} : creature) :: !list;
+      list := ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = 1.; y = 1.}; status = 0; holded = false; sprite_index = 0} : creature) :: !list;
       ()
   in
 
@@ -134,13 +161,13 @@ let%client init_client () =
           (
             hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cx) - (creek_width / 2))));
             hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cy) - (creek_height / 2))));
-            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = false;} : creature) :: moveCreature tl
+            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = false; sprite_index = hd.sprite_index} : creature) :: moveCreature tl
           )
           else
           (
             hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cx) - (creek_width / 2))));
             hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float mouse_cy) - (creek_height / 2))));
-            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = hd.holded;} : creature) :: moveCreature tl
+            ({elt = hd.elt; coord = {x = (mouse_cx -. (float_of_int (creek_width / 2))); y = (mouse_cy -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = hd.holded; sprite_index = hd.sprite_index} : creature) :: moveCreature tl
           )
         )
         else
@@ -152,10 +179,11 @@ let%client init_client () =
             set_mouse_holding 0;
             hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int ((int_of_float !mouse_coor_x) - (creek_width / 2))));
             hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int ((int_of_float !mouse_coor_y) - (creek_height / 2))));
-            ({elt = hd.elt; coord = {x = (!mouse_coor_x -. (float_of_int (creek_width / 2))); y = (!mouse_coor_y -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = true;} : creature) :: moveCreature tl
+            ({elt = hd.elt; coord = {x = (!mouse_coor_x -. (float_of_int (creek_width / 2))); y = (!mouse_coor_y -. (float_of_int (creek_height / 2)))}; direction = hd.direction; status = hd.status; holded = true; sprite_index = hd.sprite_index} : creature) :: moveCreature tl
           )
           else
           (
+            let new_sprite_index = if !next_sprite == 0 then (hd.sprite_index + 1) mod 7 else hd.sprite_index in
             let new_x_dir = 
               if hd.coord.x +. hd.direction.x < 0. || hd.coord.x +. (float_of_int creek_width) +. hd.direction.x > width then
                 (hd.direction.x *. -1.)
@@ -172,17 +200,23 @@ let%client init_client () =
             let new_y_coor = hd.coord.y +. new_y_dir in
             hd.elt##setAttribute (Js_of_ocaml.Js.string "x") (Js_of_ocaml.Js.string (string_of_int (int_of_float new_x_coor)));
             hd.elt##setAttribute (Js_of_ocaml.Js.string "y") (Js_of_ocaml.Js.string (string_of_int (int_of_float new_y_coor)));
-            ({elt = hd.elt; coord = {x = new_x_coor; y = new_y_coor}; direction = {x = new_x_dir; y = new_y_dir}; status = hd.status; holded = hd.holded;} : creature) :: moveCreature tl
+            if new_x_dir < 0. then
+              hd.elt##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList sprite_normal_left new_sprite_index))
+            else
+              hd.elt##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList sprite_normal_right new_sprite_index));
+            ({elt = hd.elt; coord = {x = new_x_coor; y = new_y_coor}; direction = {x = new_x_dir; y = new_y_dir}; status = hd.status; holded = hd.holded; sprite_index = new_sprite_index} : creature) :: moveCreature tl
           )
         )
     in
     log "tick" ();
     listcreature := moveCreature !listcreature;
+    next_sprite := (!next_sprite + 1) mod 5;
     set_mouse_holding 0;
     ()
   in
   addCreek listcreature gamewindow 75 75;
-  addCreek listcreature gamewindow 0 0;
+  addCreek listcreature gamewindow 400 0;
+  addCreek listcreature gamewindow 800 200;
 
     (* setInterval correctement typé *)
   let _ = (Js_of_ocaml.Dom_html.window##setInterval (Js_of_ocaml.Js.wrap_callback callback) 25.  )
