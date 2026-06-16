@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/03 15:09:09 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/02/04 17:19:43 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/06/12 17:37:30 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -34,6 +34,6 @@ let%server () = H42n42_app.register
       (fun () () ->
       (* Cf. section "Client side side-effects on the server" *)
        let _ = [%client (Gamescript.init_client () : unit)  ] in
-      Lwt.return (Htmlpage.page Gamescript.svg_elt ))
+      Lwt.return (Htmlpage.page Gamescript.svg_elt Gamescript.button ))
 
 

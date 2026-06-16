@@ -6,13 +6,13 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/03 16:55:37 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/02/04 15:39:11 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/06/12 17:38:02 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 module Echd = Eliom_content.Html.D
 
-let page svg_elt =
+let page svg_elt button =
   (Echd.html 
     (Echd.head 
       (Echd.title
@@ -29,6 +29,7 @@ let page svg_elt =
     (Echd.body
       [Echd.h1
         [Echd.txt "Hello"];
+        button;
         svg_elt
       ]
     )
