@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/03 16:55:37 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/06/12 17:38:02 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/06/19 12:38:08 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -27,9 +27,13 @@ let page svg_elt button =
       ]
     )
     (Echd.body
-      [Echd.h1
-        [Echd.txt "Hello"];
-        button;
+      [Echd.div
+        [
+          Echd.h1
+            ~a:[Echd.a_style "margin:auto; display:block; text-align:center"]
+            [Echd.txt "H42N42"];
+          button;
+        ];
         svg_elt
       ]
     )

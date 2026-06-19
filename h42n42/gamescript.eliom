@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/04 14:41:20 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/06/16 20:15:00 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/06/19 14:49:12 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -17,7 +17,7 @@ let%shared height = 500.
 let%shared river_width = width
 let%shared river_height = 50.
 let%shared hospital_width = width
-let%shared hospital_height = 50.
+let%shared hospital_height = 100.
 
 let%client creek_width = 50
 let%client creek_height = 35
@@ -150,19 +150,23 @@ let%shared svg_elt =
     ~a:[
       Eliom_content.Svg.D.a_id "mon_svg";
       Eliom_content.Svg.D.a_width (80., Some `Percent);
-
       Eliom_content.Svg.D.a_viewBox (0., 0., width, height);
     ]
     [
-      (*Eliom_content.Svg.D.circle
+      (*BACKGROUND*)
+      Eliom_content.Svg.D.image
         ~a:[
-          Eliom_content.Svg.D.a_cx (50., Some `Px);
-          Eliom_content.Svg.D.a_cy (50., Some `Px);
-          Eliom_content.Svg.D.a_r (50., Some `Px);
-          Eliom_content.Svg.D.a_fill (`Color ("red", None));
+          Eliom_content.Svg.D.a_x (0., Some `Px);
+          Eliom_content.Svg.D.a_y (river_height, Some `Px);
+          Eliom_content.Svg.D.a_width (width , Some `Px);
+          Eliom_content.Svg.D.a_height (height -. hospital_height -. river_height, Some `Px);
+          Eliom_content.Svg.D.a_href "./img/grass4.png";  
+          Eliom_content.Svg.D.a_preserveAspectRatio "xMidYMid slice";
         ]
-        [];*)
-      Eliom_content.Svg.D.rect
+        [];
+    (*WATER PART*)
+
+      Eliom_content.Svg.D.rect (*in case img not loading*)
         ~a:[
           Eliom_content.Svg.D.a_x (0., Some `Px);
           Eliom_content.Svg.D.a_y (0., Some `Px);
@@ -171,23 +175,84 @@ let%shared svg_elt =
           Eliom_content.Svg.D.a_fill (`Color ("blue", None));
         ]
         [];
+        
+      Eliom_content.Svg.D.image
+        ~a:[
+          Eliom_content.Svg.D.a_x (0., Some `Px);
+          Eliom_content.Svg.D.a_y (river_height -. 200., Some `Px);
+          Eliom_content.Svg.D.a_width (200., Some `Px);
+          Eliom_content.Svg.D.a_height (200., Some `Px);
+          Eliom_content.Svg.D.a_href "./img/tile_water_2.gif";
+        ]
+        [];
+              Eliom_content.Svg.D.image
+        ~a:[
+          Eliom_content.Svg.D.a_x (200., Some `Px);
+          Eliom_content.Svg.D.a_y (river_height -. 200., Some `Px);
+          Eliom_content.Svg.D.a_width (200., Some `Px);
+          Eliom_content.Svg.D.a_height (200., Some `Px);
+          Eliom_content.Svg.D.a_href "./img/tile_water_2.gif";
+        ]
+        [];
+              Eliom_content.Svg.D.image
+        ~a:[
+          Eliom_content.Svg.D.a_x (400., Some `Px);
+          Eliom_content.Svg.D.a_y (river_height -. 200., Some `Px);
+          Eliom_content.Svg.D.a_width (200., Some `Px);
+          Eliom_content.Svg.D.a_height (200., Some `Px);
+          Eliom_content.Svg.D.a_href "./img/tile_water_2.gif";
+        ]
+        [];
+              Eliom_content.Svg.D.image
+        ~a:[
+          Eliom_content.Svg.D.a_x (600., Some `Px);
+          Eliom_content.Svg.D.a_y (river_height -. 200., Some `Px);
+          Eliom_content.Svg.D.a_width (200., Some `Px);
+          Eliom_content.Svg.D.a_height (200., Some `Px);
+          Eliom_content.Svg.D.a_href "./img/tile_water_2.gif";
+        ]
+        [];
+              Eliom_content.Svg.D.image
+        ~a:[
+          Eliom_content.Svg.D.a_x (800., Some `Px);
+          Eliom_content.Svg.D.a_y (river_height -. 200., Some `Px);
+          Eliom_content.Svg.D.a_width (200., Some `Px);
+          Eliom_content.Svg.D.a_height (200., Some `Px);
+          Eliom_content.Svg.D.a_href "./img/tile_water_2.gif";
+        ]
+        [];
 
+      (*Hospital*)
       Eliom_content.Svg.D.rect
         ~a:[
           Eliom_content.Svg.D.a_x (0., Some `Px);
           Eliom_content.Svg.D.a_y (height -. hospital_height, Some `Px);
           Eliom_content.Svg.D.a_width (hospital_width, Some `Px);
           Eliom_content.Svg.D.a_height (hospital_height, Some `Px);
-          Eliom_content.Svg.D.a_fill (`Color ("green", None));
+          Eliom_content.Svg.D.a_fill (`Color ("white", None));
         ]
         [];
+
+              Eliom_content.Svg.D.image
+        ~a:[
+          Eliom_content.Svg.D.a_x (0., Some `Px);
+          Eliom_content.Svg.D.a_y (height -. hospital_height, Some `Px);
+          Eliom_content.Svg.D.a_width (hospital_width, Some `Px);
+          Eliom_content.Svg.D.a_height (hospital_height, Some `Px);
+          Eliom_content.Svg.D.a_preserveAspectRatio "none";
+          Eliom_content.Svg.D.a_href "./img/hospital2.png";
+        ]
+        [];
+      (*Other*)
+
         Eliom_content.Svg.D.text
           ~a:[
             Eliom_content.Svg.D.a_id "game_over_text";
-            Eliom_content.Svg.D.a_x_list [ (100., Some `Px) ];
-            Eliom_content.Svg.D.a_y_list [ (50., Some `Px) ];
+            Eliom_content.Svg.D.a_x_list [ (220., Some `Px) ];
+            Eliom_content.Svg.D.a_y_list [ (270., Some `Px) ];
+            Eliom_content.Svg.D.a_font_size "102px";
           ]
-          [Eliom_content.Svg.D.txt "test"]
+          [Eliom_content.Svg.D.txt "Game Over"]
     ]
   
 
@@ -216,6 +281,9 @@ let%client init_client () =
   match txt_lose with
   | None -> log "game over text introuvable" ()
   | Some game_over_txt -> log "game over text trouvé" ();
+  game_over_txt##setAttribute (Js_of_ocaml.Js.string "opacity") (Js_of_ocaml.Js.string "0.0");
+  gamewindow##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "margin : auto; display:block");
+  button_start##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "margin : 1% auto; display:block");
 
 
 
@@ -266,6 +334,7 @@ let%client init_client () =
       img_svg##setAttribute (Js_of_ocaml.Js.string "width") (Js_of_ocaml.Js.string (string_of_int creek_width));
       img_svg##setAttribute (Js_of_ocaml.Js.string "height") (Js_of_ocaml.Js.string (string_of_int creek_height));
       img_svg##setAttribute (Js_of_ocaml.Js.string "href") (Js_of_ocaml.Js.string (getEltOfList (getEltOfListList sprite_right 0) 0));
+      img_svg##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "z-index: 500");
       (* Ajouter l'image au SVG *)
       Js_of_ocaml.Dom.appendChild (Js_of_ocaml.Js.Unsafe.coerce gamewindow) img_svg;
       list := ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = (float_of_int (Random.int 2 * -2 + 1)) *. creek_speed; y = (float_of_int (Random.int 2 * -2 + 1)) *. creek_speed}; status = 0; holded = false; sprite_index = 0; width=float_of_int (creek_width); height=float_of_int (creek_height); grab_time=0;death_time=0} : creature) :: !list;
@@ -297,8 +366,9 @@ let%client init_client () =
 
   button_start##.onclick := Js_of_ocaml.Dom_html.handler (fun _event ->
             restart_game();
+            game_over_txt##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "z-index :1000");
             game_over_txt##setAttribute (Js_of_ocaml.Js.string "opacity") (Js_of_ocaml.Js.string "0.0");
-            button_start##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "opacity :0.0");
+            button_start##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "margin : 1% auto; display:block; opacity :0.0");
             button_start##setAttribute
                 (Js_of_ocaml.Js.string "disabled")
                 (Js_of_ocaml.Js.string "");
@@ -314,7 +384,7 @@ let%client init_client () =
           (
             game_running := false;
             game_over_txt##setAttribute (Js_of_ocaml.Js.string "opacity") (Js_of_ocaml.Js.string "1.0");
-            button_start##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "opacity :1.0");
+            button_start##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "margin : 1% auto; display:block; opacity :1.0");
             button_start##removeAttribute (Js_of_ocaml.Js.string "disabled");
 
           )
