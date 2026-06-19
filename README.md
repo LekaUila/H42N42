@@ -1,6 +1,6 @@
 # H42N42
 
-(In Progress)
+using OCAML and Eliom
 
 ## Description
 H42N42 Project of 42 School :
@@ -9,8 +9,18 @@ For millenia, Creatures have lived in a peaceful land bordered by a river. Unfor
 
 ## Setup
 
-
-
-
+```bash
+make installEnv
+```
 
 ## Information
+
+Start project :
+```bash
+make
+```
+clear project :
+```bash
+make fclean
+```
+
