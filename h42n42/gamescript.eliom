@@ -271,7 +271,6 @@ let%client init_client () =
   let button_core = Js_of_ocaml.Dom_html.getElementById_opt "start_button" in
   let txt_lose = Js_of_ocaml.Dom_html.getElementById_opt "game_over_text" in
   let listcreature = ref [] in
-  log "test";
   match svg_core with
   | None -> log "SVG introuvable"
   | Some gamewindow -> log "SVG trouvé";
@@ -553,7 +552,6 @@ let%client init_client () =
             time_before_spawn := !time_before_spawn_restart;
             log "spawn new creek"
           );
-        log "tick";
         listcreature := moveCreature !listcreature !listcreature;
         next_sprite := (!next_sprite + 1) mod 5;
         set_mouse_holding 0;
