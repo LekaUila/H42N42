@@ -6,7 +6,7 @@
 (*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/04 14:41:20 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/06/19 14:49:12 by Leka Uïla        ###   ########.fr       *)
+(*   Updated: 2026/07/03 15:01:45 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -258,7 +258,7 @@ let%shared svg_elt =
 
 let%client init_client () =
   Random.self_init ();
-  let log s () = Js_of_ocaml.Firebug.console##log (Js_of_ocaml.Js.string s) in
+  let log s = ignore ( Js_of_ocaml.Js.Unsafe.global##.console##log (Js_of_ocaml.Js.string s)) in
   let next_sprite = ref 1 in
   let speed_mul = ref 1. in
   let mouse_coor_x = ref 0. in
@@ -271,16 +271,16 @@ let%client init_client () =
   let button_core = Js_of_ocaml.Dom_html.getElementById_opt "start_button" in
   let txt_lose = Js_of_ocaml.Dom_html.getElementById_opt "game_over_text" in
   let listcreature = ref [] in
-  log "test" ();
+  log "test";
   match svg_core with
-  | None -> log "SVG introuvable" ()
-  | Some gamewindow -> log "SVG trouvé" ();
+  | None -> log "SVG introuvable"
+  | Some gamewindow -> log "SVG trouvé";
   match button_core with
-  | None -> log "start button introuvable" ()
-  | Some button_start -> log "start button trouvé" ();
+  | None -> log "start button introuvable"
+  | Some button_start -> log "start button trouvé";
   match txt_lose with
-  | None -> log "game over text introuvable" ()
-  | Some game_over_txt -> log "game over text trouvé" ();
+  | None -> log "game over text introuvable"
+  | Some game_over_txt -> log "game over text trouvé";
   game_over_txt##setAttribute (Js_of_ocaml.Js.string "opacity") (Js_of_ocaml.Js.string "0.0");
   gamewindow##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "margin : auto; display:block");
   button_start##setAttribute (Js_of_ocaml.Js.string "style") (Js_of_ocaml.Js.string "margin : 1% auto; display:block");
@@ -299,10 +299,10 @@ let%client init_client () =
     let x0, y0 = Js_of_ocaml.Dom_html.elementClientPosition gamewindow in
     let x1 = gamewindow##.clientWidth in
     let y1 = gamewindow##.clientHeight in
-    mouse_coor_x := (float_of_int ((ev##.clientX - x0) * (int_of_float width) / x1));
-    mouse_coor_y := (float_of_int ((ev##.clientY - y0) * (int_of_float height) / y1));
-    log (string_of_float !mouse_coor_x) ();
-    log (string_of_float !mouse_coor_y) ();
+    mouse_coor_x := (float_of_int (((int_of_float (Js_of_ocaml.Js.float_of_number ev##.clientX)) - x0) * (int_of_float width) / x1));
+    mouse_coor_y := (float_of_int (((int_of_float (Js_of_ocaml.Js.float_of_number ev##.clientY)) - y0) * (int_of_float height) / y1));
+    log (string_of_float !mouse_coor_x);
+    log (string_of_float !mouse_coor_y);
     Lwt.return ()
   in
 
@@ -551,9 +551,9 @@ let%client init_client () =
               then time_before_spawn_restart := !time_before_spawn_restart - 1 else ();
             addCreek listcreature gamewindow (Random.int ((int_of_float width) - creek_width)) (Random.int ((int_of_float height) - creek_height - (int_of_float river_height) - (int_of_float hospital_height)) + (int_of_float river_height));
             time_before_spawn := !time_before_spawn_restart;
-            log "spawn new creek" ()
+            log "spawn new creek"
           );
-        log "tick" ();
+        log "tick";
         listcreature := moveCreature !listcreature !listcreature;
         next_sprite := (!next_sprite + 1) mod 5;
         set_mouse_holding 0;
@@ -562,7 +562,7 @@ let%client init_client () =
       ) else () 
   in
     (* setInterval correctement typé *)
-  let _ = (Js_of_ocaml.Dom_html.window##setInterval (Js_of_ocaml.Js.wrap_callback callback) 25.  )
+  let _ = (Js_of_ocaml.Dom_html.window##setInterval (Js_of_ocaml.Js.wrap_callback callback) (Js_of_ocaml.Js.float 25.)  )
   in 
 
   Lwt.async (fun () ->

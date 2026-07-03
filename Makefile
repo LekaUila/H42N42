@@ -6,7 +6,7 @@
 #    By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/03 14:57:38 by Leka Uïla         #+#    #+#              #
-#    Updated: 2026/02/04 16:08:24 by Leka Uïla        ###   ########.fr        #
+#    Updated: 2026/07/03 14:35:26 by Leka Uïla        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,5 +39,5 @@ installEnv :
 	opam init
 	opam install js_of_ocaml js_of_ocaml-ppx js_of_ocaml-lwt
 	opam install eliom
-	opam install ocsigenserverclear ocsipersist-sqlite ocsipersist-sqlite-config
+	opam install ocsipersist-sqlite ocsipersist-sqlite-config
 	
