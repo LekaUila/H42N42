@@ -6,7 +6,7 @@
 #    By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/03 14:57:38 by Leka Uïla         #+#    #+#              #
-#    Updated: 2026/08/08 17:40:21 by Leka Uïla        ###   ########.fr        #
+#    Updated: 2026/08/08 18:04:24 by Leka Uïla        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,23 +21,19 @@ STATICFILEPATH = ${LOCALPATH}local/var/www/${PROJECTNAME}/
 all: run
 
 run :
-	docker-compose up --build
+	eval $(opam env)
+	cd ${PROJECTPATH} && make test.byte
 
-status :
-	docker-compose ps
-
-log :
-	docker-compose logs -f
-
-stop :
-	docker-compose down
+build :
+	eval $(opam env)
+	cd ${PROJECTPATH} && make byte
 
 clean :
-	
+	cd ${PROJECTPATH} && make clean
 
 
 fclean : clean
-	sudo docker system prune -af --volumes
+	rm -fr ${LOCALPATH}
 
 
 installEnv :
