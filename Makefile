@@ -6,7 +6,7 @@
 #    By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/03 14:57:38 by Leka Uïla         #+#    #+#              #
-#    Updated: 2026/08/08 17:40:21 by Leka Uïla        ###   ########.fr        #
+#    Updated: 2026/08/08 19:14:38 by Leka Uïla        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,9 @@ log :
 
 stop :
 	docker-compose down
+
+dockerBash :
+	docker-compose exec app bash
 
 clean :
 	
