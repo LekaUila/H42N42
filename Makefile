@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+         #
+#    By: lflandri <liam.flandrinck.58@gmail.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/02/03 14:57:38 by Leka Uïla         #+#    #+#              #
-#    Updated: 2026/08/08 19:14:38 by Leka Uïla        ###   ########.fr        #
+#    Updated: 2026/08/18 17:17:52 by lflandri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,15 +33,17 @@ stop :
 	docker-compose down
 
 dockerBash :
-	docker-compose exec app bash
+	docker-compose exec h42n42-app bash
 
-clean :
-	
+clean : stop
+
 
 
 fclean : clean
-	sudo docker system prune -af --volumes
+	docker image rm h42n42-app
 
+purge :
+	docker system prune -af --volumes
 
 installEnv :
 	bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
