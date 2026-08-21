@@ -3,10 +3,10 @@
 (*                                                        :::      ::::::::   *)
 (*   gamescript.eliom                                   :+:      :+:    :+:   *)
 (*                                                    +:+ +:+         +:+     *)
-(*   By: lflandri <liam.flandrinck.58@gmail.com>    +#+  +:+       +#+        *)
+(*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/02/04 14:41:20 by Leka Uïla         #+#    #+#             *)
-(*   Updated: 2026/08/18 20:57:17 by lflandri         ###   ########.fr       *)
+(*   Updated: 2026/08/21 18:20:20 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
@@ -172,8 +172,8 @@ let%client init_client () =
     let y1 = gamewindow##.clientHeight in
     mouse_coor_x := (float_of_int (((int_of_float (Js_of_ocaml.Js.float_of_number ev##.clientX)) - x0) * (int_of_float GameInfo.width) / x1));
     mouse_coor_y := (float_of_int (((int_of_float (Js_of_ocaml.Js.float_of_number ev##.clientY)) - y0) * (int_of_float GameInfo.height) / y1));
-    log (string_of_float !mouse_coor_x);
-    log (string_of_float !mouse_coor_y);
+    (*log (string_of_float !mouse_coor_x);*)
+    (*log (string_of_float !mouse_coor_y);*)
     Lwt.return ()
   in
 
@@ -210,7 +210,7 @@ let%client init_client () =
         | [] -> Lwt.async (fun () -> (!creek_thread_fun) nb); [new_creek]
         | hd::tl -> hd :: (add_new_creek new_creek (nb + 1) tl)
       in
-      list := add_new_creek ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = (float_of_int (Random.int 2 * -2 + 1)) *. GameInfo.creek_speed; y = (float_of_int (Random.int 2 * -2 + 1)) *. GameInfo.creek_speed}; status = 0; holded = false; sprite_index = 0; width=float_of_int (GameInfo.creek_width); height=float_of_int (GameInfo.creek_height); grab_time=0;death_time=0} : GameInfo.creature) 0 !list;
+      list := add_new_creek ({elt = img_svg; coord = {x = (float_of_int x); y = (float_of_int y)}; direction = {x = (float_of_int (Random.int 2 * - 2 + 1)) *. GameInfo.creek_speed; y = (float_of_int (Random.int 2 * -2 + 1)) *. GameInfo.creek_speed}; status = 0; holded = false; sprite_index = 0; width=float_of_int (GameInfo.creek_width); height=float_of_int (GameInfo.creek_height); grab_time=0;death_time=0} : GameInfo.creature) 0 !list;
       ()
   in
 
@@ -253,7 +253,7 @@ let%client init_client () =
 
 
   Gameloop.start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_before_spawn getEltOfList getEltOfListList
-      time_before_spawn_restart set_mouse_holding listcreature game_running gamewindow game_over_txt speed_mul button_start addCreek creek_thread_fun;
+      time_before_spawn_restart set_mouse_holding listcreature game_running gamewindow game_over_txt speed_mul button_start addCreek creek_thread_fun log;
 
   Lwt.async (fun () ->
     let open Lwt_js_events in

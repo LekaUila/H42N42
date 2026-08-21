@@ -5,3 +5,9 @@
 #mon_svg {
   border: 2px solid black;
 }
+
+#mon_svg,
+#mon_svg image {
+    -webkit-user-drag: none;
+    user-select: none;
+}

@@ -3,16 +3,16 @@
 (*                                                        :::      ::::::::   *)
 (*   gameloop.eliom                                     :+:      :+:    :+:   *)
 (*                                                    +:+ +:+         +:+     *)
-(*   By: lflandri <liam.flandrinck.58@gmail.com>    +#+  +:+       +#+        *)
+(*   By: Leka Uïla <liam.flandrinck.58@gmail.com    +#+  +:+       +#+        *)
 (*                                                +#+#+#+#+#+   +#+           *)
 (*   Created: 2026/08/18 14:48:44 by lflandri          #+#    #+#             *)
-(*   Updated: 2026/08/18 20:51:18 by lflandri         ###   ########.fr       *)
+(*   Updated: 2026/08/21 18:36:46 by Leka Uïla        ###   ########.fr       *)
 (*                                                                            *)
 (* ************************************************************************** *)
 
 
 let%client start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_before_spawn getEltOfList getEltOfListList
-      time_before_spawn_restart set_mouse_holding listcreature  game_running gamewindow game_over_txt speed_mul button_start addCreek creek_thread_fun
+      time_before_spawn_restart set_mouse_holding listcreature  game_running gamewindow game_over_txt speed_mul button_start addCreek creek_thread_fun log
       : unit =
   let mutex = Lwt_mutex.create () in
 
@@ -29,6 +29,11 @@ let%client start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_b
     let tempo () : unit Lwt.t = 
       if !game_running then
         (
+
+        log ("game loop waiting for mutex.") ;
+        let%lwt () =
+        Lwt_mutex.with_lock mutex (fun () ->
+        log ("game loop entering the mutex area.") ;
           if checkIfLoose !listcreature then
             (
               game_running := false;
@@ -38,9 +43,6 @@ let%client start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_b
 
             )
           else ();
-          let%lwt () =
-          Lwt_mutex.with_lock mutex (fun () ->
-
               if !time_before_spawn > 0 then
                 time_before_spawn := !time_before_spawn - (Random.int 2)
               else
@@ -51,8 +53,8 @@ let%client start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_b
                   time_before_spawn := !time_before_spawn_restart
                 );
               next_sprite := (!next_sprite + 1) mod 5;
-              set_mouse_holding 0;
               speed_mul := !speed_mul +. GameInfo.creek_panik_speed;
+              log ("game loop exiting the mutex area.") ;
               Lwt.return_unit
           )
           in Lwt.return_unit
@@ -63,12 +65,18 @@ let%client start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_b
   in
   
   let creek_thread nb : unit Lwt.t =
-    let rec loop nb () =
+    let loop nb () =
+      log ("thread creek " ^ (string_of_int nb ) ^ " say : mouse_holding " ^ (string_of_int !mouse_holding )) ;
+      log ("thread creek " ^ (string_of_int nb ) ^ " say : mouse_holding " ^ (string_of_int (int_of_float !mouse_coor_x))) ;
+      log ("thread creek " ^ (string_of_int nb ) ^ " say : mouse_holding " ^ (string_of_int (int_of_float !mouse_coor_y))) ;
+
       if !game_running then
       (
+        log ("thread creek " ^ (string_of_int nb ) ^ " waiting for mutex.") ;
         let%lwt () =
           Lwt_mutex.with_lock mutex (fun () ->
             (*entering special lwt context : entering mutex safe zone*)
+          log ("thread creek " ^ (string_of_int nb ) ^ " entering the mutex area.") ;
 
 
 
@@ -237,17 +245,30 @@ let%client start_game next_sprite mouse_coor_x mouse_coor_y mouse_holding time_b
             )
           in
           listcreature := moveCreature !listcreature !listcreature nb;
+          log ("thread creek " ^ (string_of_int nb ) ^ " exiting the mutex area.") ;
+
         (*exiting lwt context : quiting mutex safe zone*)
         Lwt.return_unit
         )
-        in loop nb ();
+        in Lwt.return true
       ) else (Lwt.return true)
     in
-    let tempo nb : unit Lwt.t = 
+    let rec looping nb : unit Lwt.t = 
       let _ = loop nb () in
-      Lwt.return_unit
+      let%lwt () = Js_of_ocaml_lwt.Lwt_js.sleep 0.025 in
+      if !game_running then
+      (
+        let _ = looping nb in
+        Lwt.return_unit
+      )
+      else
+      (
+        log ("thread creek " ^ (string_of_int nb ) ^ " Stopping");
+        Lwt.return_unit
+      )
     in
-    tempo nb
+    let _ = looping nb in
+    Lwt.return_unit
   in
   creek_thread_fun := creek_thread;
     (* setInterval correctement typé *)
